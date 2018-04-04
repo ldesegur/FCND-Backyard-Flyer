@@ -64,20 +64,17 @@ class BackyardFlyer(Drone):
             return
 
         elif self.flight_state == States.WAYPOINT:
-            dist = euclidean_distance(self.target_position[0:2], self.local_position[0:2])
-            if dist < 1.0:
+            if euclidean_distance(self.target_position[0:2], self.local_position[0:2]) < 1.0:
                 if len(self.all_waypoints) > 0:
                     self.waypoint_transition()
-                else:
-                    dist = euclidean_distance(self.local_velocity[0:2], self.target_position[0:2])
-                    if dist < 1.0:
-                        self.landing_transition()
+                elif euclidean_distance(self.local_velocity[0:2], self.target_position[0:2]) < 1.0:
+                    self.landing_transition()
 
     def velocity_callback(self):
         if self.flight_state == States.LANDING:
             if self.global_position[2] - self.global_home[2] < 0.1 \
                     and abs(self.local_position[2]) < 0.01:
-                print("Houston, the Eagle has landed.")
+                # Houston, the Eagle has landed.
                 self.disarming_transition()
 
     def state_callback(self):
